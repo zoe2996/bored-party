@@ -1,9 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Home from "../page";
+import { TabooPage } from "../components";
 
 export default function Deck() {
   const params = useParams()
-  return <Home deckName={params.deck.toString()}></Home>;
+  return <TabooPage deckName={params.deck.toString()}></TabooPage>;
 }
