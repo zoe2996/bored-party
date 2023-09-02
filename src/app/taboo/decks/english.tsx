@@ -1,6 +1,6 @@
-import { TabooAttribute, TabooDifficultyColor } from "./types/taboo.type";
+import { TabooAttribute, TabooDifficultyColor } from "../types/taboo.type";
 
-export const TABOO_CARDS: Array<TabooAttribute> = [
+export const ENGLISH_CARDS: Array<TabooAttribute> = [
   {
     answer: "Paramore",
     taboos: [

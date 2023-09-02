@@ -1,22 +1,27 @@
 "use client";
 
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TabooCard } from "./components";
-import { TABOO_CARDS } from "./pinoy";
 import { TabooAttribute, TabooDifficultyColor } from "./types/taboo.type";
+import { AiFillSetting } from "react-icons/ai";
+import { DECKS, getAllDecks } from "./decks/deckCollection";
 
 let currentIdx: number;
 let functionCallCount = 0;
-const tabooCardsCopy = JSON.parse(JSON.stringify(TABOO_CARDS));
+let tabooCardsCopy: Array<TabooAttribute> = [];
 
+// Function that Gets New Card from the deck
 const getNewCard = () => {
   functionCallCount = functionCallCount + 1;
   let randomIdx = currentIdx;
-  console.log(tabooCardsCopy.length);
   let loopCount = 0;
-  while (randomIdx == currentIdx && tabooCardsCopy.length > 0 && loopCount < 100) {
+  while (
+    randomIdx == currentIdx &&
+    tabooCardsCopy.length > 0 &&
+    loopCount < 100
+  ) {
     randomIdx = Math.floor(Math.random() * tabooCardsCopy.length);
-    loopCount = loopCount+1
+    loopCount = loopCount + 1;
   }
 
   currentIdx = randomIdx;
@@ -28,7 +33,9 @@ const getNewCard = () => {
   return tabooAttribute;
 };
 
-export default function Home() {
+// Default Function of the Page
+export default function Home({ deckName }: { deckName?: string }) {
+  // Card Content State
   const [cardContent, setCardContent] = useState<{
     tabooAttribute: TabooAttribute;
   }>(() => {
@@ -41,10 +48,16 @@ export default function Home() {
     };
   });
 
+  // Poinst of the player State
   const [points, setPoints] = useState<number>(0);
 
   // didMount effect
   useEffect(() => {
+    if (deckName === undefined || !Object.keys(DECKS).includes(deckName)) {
+      tabooCardsCopy = JSON.parse(JSON.stringify(getAllDecks()));
+    } else {
+      tabooCardsCopy = JSON.parse(JSON.stringify(DECKS[deckName]));
+    }
     updateCard();
   }, []);
 
@@ -62,13 +75,28 @@ export default function Home() {
     updateCard();
   };
 
+  const showSettings = () => {
+    alert("No Settings Yet!");
+  };
+
   return (
     <>
       <div className="w-screen h-screen bg-gray-900 justify-center pt-5">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold">{points.toString()} Points</h1>
-        </div>
         <div className="lg:w-96 lg:h-2/3 w-full h-4/6 m-auto p-5">
+          <div className=" flex flex-row justify-end text-gray-500 m-auto w-full mb-4 text-3xl">
+            <button
+              onClick={() => {
+                showSettings();
+              }}
+            >
+              <AiFillSetting />
+            </button>
+          </div>
+
+          <div className="text-center my-4">
+            <h1 className="text-4xl font-bold">{points.toString()} Points</h1>
+          </div>
+
           <div className="text-center h-full">
             {tabooCardsCopy.length !== 0 ? (
               <TabooCard
