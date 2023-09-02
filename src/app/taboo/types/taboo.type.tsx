@@ -1,4 +1,4 @@
-export type TabooCard = {
+export type TabooAttribute = {
     answer: string;
     taboos: readonly[string, string, string, string, string];
     difficultyColor: TabooDifficultyColor

@@ -1,29 +1,35 @@
 import { ReactElement } from "react";
-import { TabooCard } from "./types/taboo.type";
+import { TabooAttribute } from "./types/taboo.type";
+import Card from "@/components/shared/card.component";
+import { CardProperty } from "@/types/card.type";
 
-export function getTabooCardElement(tabooCard: TabooCard) : ReactElement {
+export function TabooCard({tabooAttribute}: {tabooAttribute:TabooAttribute}) {
+  let tabooElements: ReactElement[] = [];
 
-    let tabooElements: ReactElement[] = []
+  // loop through taboo words
+  tabooAttribute.taboos.map((taboo: string) => {
+    tabooElements.push(
+      <h3 key={taboo} className="font-sans font-medium text-3xl mt-4">
+        {taboo}
+      </h3>
+    );
+  });
 
-    // loop through taboo words
-    tabooCard.taboos.map((taboo:string)=> {
-        tabooElements.push(<h3 className="font-sans font-medium text-2xl">{taboo}</h3>)
-    })
-
-    const DEFAULT_CLASS = 'p-10 text-center'
-    const computedClass = DEFAULT_CLASS+' '+tabooCard.difficultyColor
-    return (
-        <>
-        <div className={computedClass}>
-            <div className="p-3">
-        <h1 className='font-sans font-bold text-3xl '>{tabooCard.answer}</h1>
-            </div>
+  const DEFAULT_CLASS = "p-10 text-center w-full h-full";
+  const computedClass = DEFAULT_CLASS + " " + tabooAttribute.difficultyColor;
+  const innerContent: ReactElement = (
+    <>
+      <div className={computedClass}>
+        <div className="p-3">
+          <h1 className="font-sans font-bold text-4xl ">{tabooAttribute.answer}</h1>
+        </div>
         <hr></hr>
-        <div className="p-2">
-
-        {tabooElements}
-        </div>
-        </div>
-        </>
-    )
+        <div className="p-2">{tabooElements}</div>
+      </div>
+    </>
+  );
+  const cardProperty: CardProperty = {
+    innerContent: innerContent,
+  };
+  return <Card cardProperty={cardProperty}></Card>;
 }
