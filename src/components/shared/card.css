@@ -1,0 +1,4 @@
+/* This only changes this particular animation duration */
+.animate__jackInTheBox {
+  --animate-duration: 0.8s;
+}

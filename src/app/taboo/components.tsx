@@ -97,7 +97,12 @@ export function TabooPage({ deckName }: TabooPageProps) {
       tabooCardsCopy = JSON.parse(JSON.stringify(DECKS[deckName]));
     }
     updateCard();
-  }, []);
+  }, [deckName]);
+
+  useEffect(()=>{
+
+
+  }, [cardContent])
 
   const updateCard = () => {
     setCardContent({ tabooAttribute: getNewCard() });
