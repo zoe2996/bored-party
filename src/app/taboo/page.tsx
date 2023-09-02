@@ -68,7 +68,7 @@ export default function Home() {
         <div className="text-center">
           <h1 className="text-4xl font-bold">{points.toString()} Points</h1>
         </div>
-        <div className="lg:w-96 lg:h-1/2 w-full h-4/6 m-auto p-5">
+        <div className="lg:w-96 lg:h-2/3 w-full h-4/6 m-auto p-5">
           <div className="text-center h-full">
             {tabooCardsCopy.length !== 0 ? (
               <TabooCard
