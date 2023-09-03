@@ -100,7 +100,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
   return (
     <>
       <div className="w-screen h-screen bg-gray-900 justify-center pt-5">
-        <div className="lg:w-2/3 lg:h-1/3 w-full h-4/6 m-auto p-5">
+        <div className="lg:w-2/3 lg:h-1/3 w-full h-2/6 m-auto p-5">
           <div className=" flex flex-row justify-end text-gray-500 m-auto w-full mb-4 text-3xl">
             <button
               onClick={() => {
