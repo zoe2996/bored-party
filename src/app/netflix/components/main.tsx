@@ -1,36 +1,13 @@
-import { ReactElement, useEffect, useState } from "react";
-import { NetflixAttribute } from "./types/netflix.type";
-import Card from "@/components/shared/card.component";
-import { CardProperty } from "@/types/card.type";
-import { DECKS, getAllDecks } from "./decks/deckCollection";
+import { useEffect, useState } from "react";
+import { NetflixAttribute } from "../types/netflix.type";
+import { DECKS, getAllDecks } from "../decks/deckCollection";
 import { AiFillSetting } from "react-icons/ai";
-
-export function NetflixCard({
-  netflixAttribute,
-}: {
-  netflixAttribute: NetflixAttribute;
-}) {
-  const innerContent: ReactElement = (
-    <>
-      <div className="p-10 text-center w-full h-full bg-black flex items-center">
-        <div className="p-3 text-center m-auto">
-          <h1 className="font-sans font-bold text-4xl text-red-600 text-center">
-            {netflixAttribute.answer}
-          </h1>
-        </div>
-      </div>
-    </>
-  );
-  const cardProperty: CardProperty = {
-    innerContent: innerContent,
-  };
-  return <Card cardProperty={cardProperty}></Card>;
-}
+import { NetflixCard } from "./card";
+import { TEAM_BLUE, TEAM_RED, TeamToggle } from "./team";
 
 let currentIdx: number;
 let functionCallCount = 0;
 let netflixCardsCopy: Array<NetflixAttribute> = [];
-
 // Function that Gets New Card from the deck
 const getNewCard = () => {
   functionCallCount = functionCallCount + 1;
@@ -69,8 +46,9 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     };
   });
 
-  // Poinst of the player State
-  const [points, setPoints] = useState<number>(0);
+  const [currentTeam, setCurrentTeam] = useState<string>("BLUE");
+  const [blueTeamPoints, setBlueTeamPoints] = useState<number>(0);
+  const [redTeamPoints, setRedTeamPoints] = useState<number>(5);
 
   // didMount effect
   useEffect(() => {
@@ -88,17 +66,34 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     setCardContent({ netflixAttribute: getNewCard() });
   };
 
-  const markCorrect = (addPoints: number) => {
-    setPoints((points) => points + addPoints);
-    updateCard();
-  };
+  function getPoints() {
+    if (currentTeam === TEAM_BLUE) {
+      return blueTeamPoints;
+    } else if (currentTeam === TEAM_RED) {
+      return redTeamPoints;
+    }
+    return 0;
+  }
 
-  const resetPoints = () => {
-    setPoints(0);
+  const markCorrect = (addPoints: number) => {
+    setPoints(getPoints() + addPoints);
+    updateCard();
   };
 
   const showSettings = () => {
     alert("No Settings Yet!");
+  };
+
+  function setPoints(points: number) {
+    if (currentTeam === TEAM_BLUE) {
+      setBlueTeamPoints(points);
+    } else if (currentTeam === TEAM_RED) {
+      setRedTeamPoints(points);
+    }
+  }
+
+  const handleTeamChange = (team: string) => {
+    setCurrentTeam(team);
   };
 
   return (
@@ -115,10 +110,16 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
             </button>
           </div>
 
-          <div className="text-center my-4">
-            <h1 className="text-4xl font-bold">{points.toString()} Points</h1>
-          </div>
+          <TeamToggle
+            onChangeTeam={handleTeamChange}
+            currentTeam={currentTeam}
+          ></TeamToggle>
 
+          <div className="text-center my-4">
+            <h1 className="text-4xl font-bold">
+              {getPoints().toString()} Points
+            </h1>
+          </div>
           <div className="text-center h-full">
             {netflixCardsCopy.length !== 0 ? (
               <NetflixCard
@@ -166,18 +167,6 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
               disabled={netflixCardsCopy.length === 0}
             >
               Skip
-            </button>
-
-
-
-            <button
-              onClick={() => {
-                resetPoints();
-              }}
-              className="col-span-3 bg-red-700 hover:bg-red-700 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 mt-10 text-2xl"
-              disabled={netflixCardsCopy.length === 0}
-            >
-              Reset Points
             </button>
           </div>
         </div>
