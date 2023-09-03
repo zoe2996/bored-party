@@ -48,7 +48,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
 
   const [currentTeam, setCurrentTeam] = useState<string>("BLUE");
   const [blueTeamPoints, setBlueTeamPoints] = useState<number>(0);
-  const [redTeamPoints, setRedTeamPoints] = useState<number>(5);
+  const [redTeamPoints, setRedTeamPoints] = useState<number>(0);
 
   // didMount effect
   useEffect(() => {
