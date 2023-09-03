@@ -93,6 +93,10 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     updateCard();
   };
 
+  const resetPoints = () => {
+    setPoints(0);
+  };
+
   const showSettings = () => {
     alert("No Settings Yet!");
   };
@@ -162,6 +166,18 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
               disabled={netflixCardsCopy.length === 0}
             >
               Skip
+            </button>
+
+
+
+            <button
+              onClick={() => {
+                resetPoints();
+              }}
+              className="col-span-3 bg-red-700 hover:bg-red-700 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 mt-10 text-2xl"
+              disabled={netflixCardsCopy.length === 0}
+            >
+              Reset Points
             </button>
           </div>
         </div>
