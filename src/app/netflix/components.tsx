@@ -10,7 +10,6 @@ export function NetflixCard({
 }: {
   netflixAttribute: NetflixAttribute;
 }) {
-
   const innerContent: ReactElement = (
     <>
       <div className="p-10 text-center w-full h-full bg-black flex items-center">
@@ -65,7 +64,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
   }>(() => {
     return {
       netflixAttribute: {
-        answer: ""
+        answer: "",
       },
     };
   });
@@ -83,17 +82,14 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     updateCard();
   }, [deckName]);
 
-  useEffect(()=>{
-
-
-  }, [cardContent])
+  useEffect(() => {}, [cardContent]);
 
   const updateCard = () => {
     setCardContent({ netflixAttribute: getNewCard() });
   };
 
-  const markCorrect = () => {
-    setPoints((points) => points + 1);
+  const markCorrect = (addPoints: number) => {
+    setPoints((points) => points + addPoints);
     updateCard();
   };
 
@@ -131,7 +127,16 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
           <div className="grid grid-cols-3 text-center mt-4 gap-4">
             <button
               onClick={() => {
-                markCorrect();
+                markCorrect(3);
+              }}
+              className="col-span-1 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
+              disabled={netflixCardsCopy.length === 0}
+            >
+              One Word
+            </button>
+            <button
+              onClick={() => {
+                markCorrect(2);
               }}
               className="col-span-1 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
               disabled={netflixCardsCopy.length === 0}
@@ -141,17 +146,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
 
             <button
               onClick={() => {
-                markCorrect();
-              }}
-              className="col-span-1 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
-              disabled={netflixCardsCopy.length === 0}
-            >
-              One Word
-            </button>
-
-            <button
-              onClick={() => {
-                markCorrect();
+                markCorrect(1);
               }}
               className="col-span-1 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
               disabled={netflixCardsCopy.length === 0}
