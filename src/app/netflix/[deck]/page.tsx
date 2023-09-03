@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { NetflixPage } from "../components";
+import { NetflixPage } from "../components/main";
 
 export default function Deck() {
   const params = useParams()
