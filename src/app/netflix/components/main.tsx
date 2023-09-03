@@ -4,6 +4,8 @@ import { DECKS, getAllDecks } from "../decks/deckCollection";
 import { AiFillSetting } from "react-icons/ai";
 import { NetflixCard } from "./card";
 import { TEAM_BLUE, TEAM_RED, TeamToggle } from "./team";
+import { TbPlayerSkipForwardFilled } from "react-icons/tb";
+import { AiOutlineCheck } from "react-icons/ai";
 
 let currentIdx: number;
 let functionCallCount = 0;
@@ -31,6 +33,12 @@ const getNewCard = () => {
   return netflixAttribute;
 };
 
+
+
+const ACT_IT:string = 'Act It';
+const ONE_WORD:string = 'One Word';
+const QUOTE_IT:string = 'Quote It';
+
 interface NetflixPageProps {
   deckName?: string;
 }
@@ -46,6 +54,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     };
   });
 
+  const [currentCategory, setCurrentCategory] = useState<string>('');
   const [currentTeam, setCurrentTeam] = useState<string>("BLUE");
   const [blueTeamPoints, setBlueTeamPoints] = useState<number>(0);
   const [redTeamPoints, setRedTeamPoints] = useState<number>(0);
@@ -62,9 +71,37 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
 
   useEffect(() => {}, [cardContent]);
 
+  function setRandomCategory(){
+    const randomNumber = Math.floor(Math.random() * 3);
+
+    if(randomNumber === 0){
+        setCurrentCategory(ONE_WORD)
+    }
+    else if(randomNumber === 1){
+        setCurrentCategory(ACT_IT)
+    }
+    else if(randomNumber === 2){
+        setCurrentCategory(QUOTE_IT)
+    }
+
+  }
+
   const updateCard = () => {
     setCardContent({ netflixAttribute: getNewCard() });
+    setRandomCategory()
   };
+
+  function getAddPoints(){
+    if(currentCategory === ONE_WORD){
+        return 3;
+    }
+    else if(currentCategory === ACT_IT){
+        return 2;
+    }
+    else{
+        return 1;
+    }
+  }
 
   function getPoints() {
     if (currentTeam === TEAM_BLUE) {
@@ -74,9 +111,9 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     }
     return 0;
   }
-
-  const markCorrect = (addPoints: number) => {
-    setPoints(getPoints() + addPoints);
+  
+  const markCorrect = () => {
+    setPoints(getPoints() + getAddPoints());
     updateCard();
   };
 
@@ -94,6 +131,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
 
   const handleTeamChange = (team: string) => {
     setCurrentTeam(team);
+    updateCard();
   };
 
   return (
@@ -116,13 +154,14 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
           ></TeamToggle>
 
           <div className="text-center my-4">
-            <h1 className="text-4xl font-bold">
+            <h1 className="text-3xl font-bold">
               {getPoints().toString()} Points
             </h1>
           </div>
           <div className="text-center h-full">
             {netflixCardsCopy.length !== 0 ? (
               <NetflixCard
+                category={currentCategory}
                 netflixAttribute={cardContent?.netflixAttribute}
               ></NetflixCard>
             ) : (
@@ -132,41 +171,22 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
           <div className="grid grid-cols-3 text-center mt-4 gap-4">
             <button
               onClick={() => {
-                markCorrect(3);
+                markCorrect();
               }}
-              className="col-span-1 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
+              className="col-span-2 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
               disabled={netflixCardsCopy.length === 0}
             >
-              One Word
-            </button>
-            <button
-              onClick={() => {
-                markCorrect(2);
-              }}
-              className="col-span-1 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
-              disabled={netflixCardsCopy.length === 0}
-            >
-              Act It
-            </button>
-
-            <button
-              onClick={() => {
-                markCorrect(1);
-              }}
-              className="col-span-1 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
-              disabled={netflixCardsCopy.length === 0}
-            >
-              Quote It
+              <AiOutlineCheck />
             </button>
 
             <button
               onClick={() => {
                 updateCard();
               }}
-              className="col-span-3 bg-yellow-500 hover:bg-yellow-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-2xl"
+              className="col-auto bg-yellow-500 hover:bg-yellow-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-5xl flex justify-center items-center"
               disabled={netflixCardsCopy.length === 0}
             >
-              Skip
+              <TbPlayerSkipForwardFilled />
             </button>
           </div>
         </div>
