@@ -2,13 +2,16 @@ import { CardProperty } from "@/types/card.type";
 
 import "animate.css";
 import "./card.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Card({ cardProperty }: { cardProperty: CardProperty }) {
   //   const randomKey = uuidv4();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const animateClass = "animate__jackInTheBox";
+
+  let [addedClass, setAddedClass] = useState<string>("");
+
   useEffect(() => {
     if (cardRef.current !== null) {
       cardRef.current.classList.add(animateClass);
@@ -17,12 +20,7 @@ function Card({ cardProperty }: { cardProperty: CardProperty }) {
         cardRef.current?.classList.remove(animateClass);
       });
     }
-    return () => {
-      if (cardRef.current !== null) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        cardRef.current.classList.remove(animateClass);
-      }
-    };
+    return () => {};
   }, [cardProperty]);
 
   return (
@@ -30,7 +28,9 @@ function Card({ cardProperty }: { cardProperty: CardProperty }) {
       <div
         ref={cardRef}
         className={
-          "block rounded-xl overflow-hidden w-full h-full bg-gray-500 animate__animated"
+          "block rounded-xl overflow-hidden w-full h-full bg-gray-500 animate__animated" +
+          " " +
+          addedClass
         }
       >
         {cardProperty?.innerContent}
