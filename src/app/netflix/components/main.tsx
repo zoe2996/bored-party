@@ -6,7 +6,8 @@ import { NetflixCard } from "./card";
 import { TEAM_BLUE, TEAM_RED, TeamToggle } from "./team";
 import { TbPlayerSkipForwardFilled } from "react-icons/tb";
 import { AiOutlineCheck } from "react-icons/ai";
-
+import { FaTheaterMasks } from "react-icons/fa";
+import { BiSolidQuoteAltLeft } from 'react-icons/bi'
 let currentIdx: number;
 let functionCallCount = 0;
 let netflixCardsCopy: Array<NetflixAttribute> = [];
@@ -33,11 +34,9 @@ const getNewCard = () => {
   return netflixAttribute;
 };
 
-
-
-const ACT_IT:string = 'Act It';
-const ONE_WORD:string = 'One Word';
-const QUOTE_IT:string = 'Quote It';
+const ACT_IT: string = "Act It";
+const ONE_WORD: string = "One Word";
+const QUOTE_IT: string = "Quote It";
 
 interface NetflixPageProps {
   deckName?: string;
@@ -54,7 +53,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     };
   });
 
-  const [currentCategory, setCurrentCategory] = useState<string>('');
+  const [currentCategory, setCurrentCategory] = useState<string>("");
   const [currentTeam, setCurrentTeam] = useState<string>("BLUE");
   const [blueTeamPoints, setBlueTeamPoints] = useState<number>(0);
   const [redTeamPoints, setRedTeamPoints] = useState<number>(0);
@@ -71,35 +70,30 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
 
   useEffect(() => {}, [cardContent]);
 
-  function setRandomCategory(){
+  function setRandomCategory() {
     const randomNumber = Math.floor(Math.random() * 3);
 
-    if(randomNumber === 0){
-        setCurrentCategory(ONE_WORD)
+    if (randomNumber === 0) {
+      setCurrentCategory(ONE_WORD);
+    } else if (randomNumber === 1) {
+      setCurrentCategory(ACT_IT);
+    } else if (randomNumber === 2) {
+      setCurrentCategory(QUOTE_IT);
     }
-    else if(randomNumber === 1){
-        setCurrentCategory(ACT_IT)
-    }
-    else if(randomNumber === 2){
-        setCurrentCategory(QUOTE_IT)
-    }
-
   }
 
   const updateCard = () => {
     setCardContent({ netflixAttribute: getNewCard() });
-    setRandomCategory()
+    setRandomCategory();
   };
 
-  function getAddPoints(){
-    if(currentCategory === ONE_WORD){
-        return 3;
-    }
-    else if(currentCategory === ACT_IT){
-        return 2;
-    }
-    else{
-        return 1;
+  function getAddPoints() {
+    if (currentCategory === ONE_WORD) {
+      return 3;
+    } else if (currentCategory === ACT_IT) {
+      return 2;
+    } else {
+      return 1;
     }
   }
 
@@ -111,12 +105,15 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     }
     return 0;
   }
-  
+
   const markCorrect = () => {
     setPoints(getPoints() + getAddPoints());
     updateCard();
   };
 
+  function changeCategory(category: string){
+    setCurrentCategory(category)
+  }
   const showSettings = () => {
     alert("No Settings Yet!");
   };
@@ -168,12 +165,12 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
               <h1 className="font-bold text-4xl">No More Cards Left</h1>
             )}
           </div>
-          <div className="grid grid-cols-3 text-center mt-4 gap-4">
+          <div className="grid grid-cols-3 text-center mt-4 gap-3">
             <button
               onClick={() => {
                 markCorrect();
               }}
-              className="col-span-2 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
+              className="col-span-2 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
               disabled={netflixCardsCopy.length === 0}
             >
               <AiOutlineCheck />
@@ -183,10 +180,41 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
               onClick={() => {
                 updateCard();
               }}
-              className="col-auto bg-yellow-500 hover:bg-yellow-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-8 px-4 text-center mx-2 text-5xl flex justify-center items-center"
+              className="col-auto bg-yellow-500 hover:bg-yellow-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl flex justify-center items-center"
               disabled={netflixCardsCopy.length === 0}
             >
               <TbPlayerSkipForwardFilled />
+            </button>
+            
+
+            <button
+              onClick={() => {
+                changeCategory(ONE_WORD);
+              }}
+              className="col-span-1  bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
+              disabled={netflixCardsCopy.length === 0 || currentCategory === ONE_WORD}
+            >
+              1
+            </button>
+
+            <button
+              onClick={() => {
+                changeCategory(ACT_IT);
+              }}
+              className="col-span-1 bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
+              disabled={netflixCardsCopy.length === 0 || currentCategory === ACT_IT}
+            >
+              <FaTheaterMasks />
+            </button>
+
+            <button
+              onClick={() => {
+                changeCategory(QUOTE_IT);
+              }}
+              className="col-span-1 bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
+              disabled={netflixCardsCopy.length === 0 || currentCategory === QUOTE_IT}
+            >
+              <BiSolidQuoteAltLeft />
             </button>
           </div>
         </div>
