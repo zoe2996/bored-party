@@ -156,7 +156,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     <>
       <div className="w-screen h-screen bg-gray-900 justify-center pt-5">
         <div className="lg:w-2/3 lg:h-1/3 w-full h-2/6 m-auto p-5">
-          <div className=" flex flex-row justify-end text-gray-500 m-auto w-full mb-4 text-3xl">
+          {/* <div className=" flex flex-row justify-end text-gray-500 m-auto w-full mb-4 text-3xl">
             <button
               onClick={() => {
                 showSettings();
@@ -164,25 +164,25 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
             >
               <AiFillSetting />
             </button>
-          </div>
+          </div> */}
 
           <TeamToggle
             onChangeTeam={handleTeamChange}
             currentTeam={currentTeam}
           ></TeamToggle>
 
+          <div className="my-4">
+            <TimerProgress
+              timerSeconds={DEFAULT_TIMER_SECONDS}
+              countdownDate={countdownDate}
+              onTimerFinished={handleTimerFinished}
+              resetTime={true}
+            ></TimerProgress>
+          </div>
           <div className="text-center my-4">
             <h1 className="text-3xl font-bold">
               {getPoints().toString()} Points
             </h1>
-            <div className="mt-2">
-              <TimerProgress
-                timerSeconds={DEFAULT_TIMER_SECONDS}
-                countdownDate={countdownDate}
-                onTimerFinished={handleTimerFinished}
-                resetTime={true}
-              ></TimerProgress>
-            </div>
           </div>
           <div className="text-center h-full">
             {netflixCardsCopy.length !== 0 ? (
