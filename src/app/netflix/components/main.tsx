@@ -154,6 +154,8 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
 
   return (
     <>
+      <title>Netflix: The Game</title>
+      <meta name="description" content="Make them guess the movie by Quote It, Act It or giving just One Word!"></meta>
       <div className="w-screen h-screen bg-gray-900 justify-center pt-5">
         <div className="lg:w-2/3 lg:h-1/3 w-full h-2/6 m-auto p-5">
           {/* <div className=" flex flex-row justify-end text-gray-500 m-auto w-full mb-4 text-3xl">
