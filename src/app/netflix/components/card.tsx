@@ -4,13 +4,11 @@ import { CardProperty } from "@/types/card.type";
 import { ReactElement } from "react";
 import Image from "next/image";
 
-export function NetflixCard({
-  netflixAttribute,
-  category,
-}: {
+interface NetflixCardHeader {
   netflixAttribute: NetflixAttribute;
   category: string;
-}) {
+}
+export function NetflixCard({ netflixAttribute, category }: NetflixCardHeader) {
   function getTextSizeClass(answer: string): string {
     if (answer.length <= 20) {
       return "text-3xl";

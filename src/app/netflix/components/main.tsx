@@ -7,7 +7,8 @@ import { TEAM_BLUE, TEAM_RED, TeamToggle } from "./team";
 import { TbPlayerSkipForwardFilled } from "react-icons/tb";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaTheaterMasks } from "react-icons/fa";
-import { BiSolidQuoteAltLeft } from 'react-icons/bi'
+import { BiSolidQuoteAltLeft } from "react-icons/bi";
+import { TimerProgress, getCountdownDate } from "./timer";
 let currentIdx: number;
 let functionCallCount = 0;
 let netflixCardsCopy: Array<NetflixAttribute> = [];
@@ -37,6 +38,7 @@ const getNewCard = () => {
 const ACT_IT: string = "Act It";
 const ONE_WORD: string = "One Word";
 const QUOTE_IT: string = "Quote It";
+const DEFAULT_TIMER_SECONDS = 90;
 
 interface NetflixPageProps {
   deckName?: string;
@@ -58,6 +60,10 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
   const [blueTeamPoints, setBlueTeamPoints] = useState<number>(0);
   const [redTeamPoints, setRedTeamPoints] = useState<number>(0);
 
+  const [countdownDate, setCountdownDate] = useState<Date>(
+    getCountdownDate(DEFAULT_TIMER_SECONDS)
+  );
+
   // didMount effect
   useEffect(() => {
     if (deckName === undefined || !Object.keys(DECKS).includes(deckName)) {
@@ -67,8 +73,6 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     }
     updateCard();
   }, [deckName]);
-
-  useEffect(() => {}, [cardContent]);
 
   function setRandomCategory() {
     const randomNumber = Math.floor(Math.random() * 3);
@@ -111,8 +115,8 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     updateCard();
   };
 
-  function changeCategory(category: string){
-    setCurrentCategory(category)
+  function changeCategory(category: string) {
+    setCurrentCategory(category);
   }
   const showSettings = () => {
     alert("No Settings Yet!");
@@ -126,9 +130,26 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     }
   }
 
-  const handleTeamChange = (team: string) => {
-    setCurrentTeam(team);
+  useEffect(() => {
     updateCard();
+  }, [currentTeam]);
+
+  const handleTeamChange = (team: string) => {
+    setCurrentTeam(() => team);
+    updateCard();
+    setCountdownDate(() => {
+      return getCountdownDate(DEFAULT_TIMER_SECONDS);
+    });
+  };
+
+  const handleTimerFinished = () => {
+    setCurrentTeam((currentTeam) => {
+      if (currentTeam == TEAM_BLUE) {
+        return TEAM_RED;
+      } else {
+        return TEAM_BLUE;
+      }
+    });
   };
 
   return (
@@ -154,6 +175,14 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
             <h1 className="text-3xl font-bold">
               {getPoints().toString()} Points
             </h1>
+            <div className="mt-2">
+              <TimerProgress
+                timerSeconds={DEFAULT_TIMER_SECONDS}
+                countdownDate={countdownDate}
+                onTimerFinished={handleTimerFinished}
+                resetTime={true}
+              ></TimerProgress>
+            </div>
           </div>
           <div className="text-center h-full">
             {netflixCardsCopy.length !== 0 ? (
@@ -185,14 +214,15 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
             >
               <TbPlayerSkipForwardFilled />
             </button>
-            
 
             <button
               onClick={() => {
                 changeCategory(ONE_WORD);
               }}
               className="col-span-1  bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={netflixCardsCopy.length === 0 || currentCategory === ONE_WORD}
+              disabled={
+                netflixCardsCopy.length === 0 || currentCategory === ONE_WORD
+              }
             >
               1
             </button>
@@ -202,7 +232,9 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
                 changeCategory(ACT_IT);
               }}
               className="col-span-1 bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={netflixCardsCopy.length === 0 || currentCategory === ACT_IT}
+              disabled={
+                netflixCardsCopy.length === 0 || currentCategory === ACT_IT
+              }
             >
               <FaTheaterMasks />
             </button>
@@ -212,7 +244,9 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
                 changeCategory(QUOTE_IT);
               }}
               className="col-span-1 bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={netflixCardsCopy.length === 0 || currentCategory === QUOTE_IT}
+              disabled={
+                netflixCardsCopy.length === 0 || currentCategory === QUOTE_IT
+              }
             >
               <BiSolidQuoteAltLeft />
             </button>
