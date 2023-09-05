@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import { clearInterval, setInterval } from "timers";
 import { IoMdTime } from "react-icons/io";
-import { randomUUID } from "crypto";
 
 interface TimerProgressHeader {
   countdownDate: Date;
