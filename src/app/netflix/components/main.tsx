@@ -23,9 +23,10 @@ import useSWR from "swr";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 interface NetflixPageProps {
   deckName?: string;
+  live?: boolean;
 }
 
-export function NetflixPage({ deckName }: NetflixPageProps) {
+export function NetflixPage({ deckName, live }: NetflixPageProps) {
   // Card Content State
   const [cardContent, setCardContent] = useState<{
     netflixAttribute: NetflixAttribute;
@@ -46,15 +47,15 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     getCountdownDate(DEFAULT_TIMER_SECONDS)
   );
 
-  const LIVE_DECK_NAME_PARAM = "live";
-  const SHEETS_RESPONSE = useSWR(
-    deckName === LIVE_DECK_NAME_PARAM ? "/api/netflix" : null,
-    fetcher
-  );
+  const API_URL = live
+    ? "/api/netflix?" +
+      (deckName ? new URLSearchParams({ category: deckName }) : "")
+    : null;
+  const SHEETS_RESPONSE = useSWR(API_URL, fetcher);
 
   // didMount effect
   useEffect(() => {
-    if (deckName === LIVE_DECK_NAME_PARAM) {
+    if (live) {
       netflixCardsCopy = [];
     } else {
       if (deckName === undefined || !Object.keys(DECKS).includes(deckName)) {

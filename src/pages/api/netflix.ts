@@ -1,16 +1,22 @@
 import { NetflixAttribute } from "@/app/netflix/types/netflix.type";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getContents } from "./shared/sheets";
+import { getColumnName, getContents } from "./shared/sheets";
 
 type ResponseData = {
   netflixAttributes?: Array<NetflixAttribute>;
   message?: string;
 };
+const SHEET_NAME = "netflix";
 export default async function getNetflixSheetAttributes(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  const data = await getContents("netflix!A:A");
+  let category: string = req.query["category"]?.toString() ?? "";
+  const categories = await getContents(SHEET_NAME + "!A1:Z1", "COLUMNS");
+  const categoryIndexNumber = getIndexNumber(category, categories ?? []);
+  const columnName = getColumnName(categoryIndexNumber);
+
+  const data = await getContents(`netflix!${columnName}2:${columnName}1000`);
 
   if (data !== null) {
     const response = await buildAttributes(data);
@@ -26,4 +32,17 @@ function buildAttributes(data: Array<any>): Array<NetflixAttribute> {
     netflixAttributes.push({ answer: row[0] });
   });
   return netflixAttributes;
+}
+
+function getIndexNumber(category: string, rows: Array<Array<string>>) {
+  let categoryIndex = 0;
+
+  for (let idx = 0; idx < rows.length; idx++) {
+    const row = rows[idx];
+    if (row[0].toLowerCase() === category.toLowerCase()) {
+      categoryIndex = idx;
+      break;
+    }
+  }
+  return categoryIndex;
 }
