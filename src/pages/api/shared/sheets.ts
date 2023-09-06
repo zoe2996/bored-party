@@ -1,8 +1,8 @@
 import { google } from "googleapis";
-import { NextApiRequest, NextApiResponse } from "next";
-async function getContents() {
+import { resolve } from "path";
+
+export async function getContents(sheetName: string) {
   try {
-    console.log("API CALLED!!");
     const target = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
     const jwt = new google.auth.JWT(
       process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
@@ -14,29 +14,17 @@ async function getContents() {
     const sheets = google.sheets({ version: "v4", auth: jwt });
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.SPREADSHEET_ID,
-      range: "taboo", // sheet name
+      range: sheetName, // sheet name
     });
 
     const rows = response.data.values || [];
+
     if (rows.length) {
-      console.log(rows)
-      return rows
+      return rows;
     }
   } catch (err) {
-    console.log(err);
+    console.log("ERRROR OCCURED!")
   }
-  // return []
-}
+  return null
 
-type ResponseData = {
-  data: any;
-};
-export default async function getData(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
-) {
-
-  const response = await getContents();
-  console.log(response)
-  res.status(200).json({ 'data': response});
 }

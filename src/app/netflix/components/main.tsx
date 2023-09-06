@@ -12,37 +12,19 @@ import { TimerProgress, getCountdownDate } from "./timer";
 let currentIdx: number;
 let functionCallCount = 0;
 let netflixCardsCopy: Array<NetflixAttribute> = [];
-// Function that Gets New Card from the deck
-const getNewCard = () => {
-  functionCallCount = functionCallCount + 1;
-  let randomIdx = currentIdx;
-  let loopCount = 0;
-  while (
-    randomIdx == currentIdx &&
-    netflixCardsCopy.length > 0 &&
-    loopCount < 100
-  ) {
-    randomIdx = Math.floor(Math.random() * netflixCardsCopy.length);
-    loopCount = loopCount + 1;
-  }
-
-  currentIdx = randomIdx;
-  const netflixAttribute: NetflixAttribute = netflixCardsCopy[randomIdx];
-
-  //remove card from copy
-  netflixCardsCopy.splice(randomIdx, 1);
-
-  return netflixAttribute;
-};
 
 const ACT_IT: string = "Act It";
 const ONE_WORD: string = "One Word";
 const QUOTE_IT: string = "Quote It";
 const DEFAULT_TIMER_SECONDS = 90;
 
+import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 interface NetflixPageProps {
   deckName?: string;
 }
+
 export function NetflixPage({ deckName }: NetflixPageProps) {
   // Card Content State
   const [cardContent, setCardContent] = useState<{
@@ -64,15 +46,33 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     getCountdownDate(DEFAULT_TIMER_SECONDS)
   );
 
+  const SHEETS_RESPONSE = useSWR("/api/netflix", fetcher);
+
   // didMount effect
   useEffect(() => {
-    if (deckName === undefined || !Object.keys(DECKS).includes(deckName)) {
-      netflixCardsCopy = JSON.parse(JSON.stringify(getAllDecks()));
+    if (deckName === "sheets") {
+      netflixCardsCopy = [];
     } else {
-      netflixCardsCopy = JSON.parse(JSON.stringify(DECKS[deckName]));
+      if (deckName === undefined || !Object.keys(DECKS).includes(deckName)) {
+        netflixCardsCopy = JSON.parse(JSON.stringify(getAllDecks()));
+      } else {
+        netflixCardsCopy = JSON.parse(JSON.stringify(DECKS[deckName]));
+      }
+      updateCard();
     }
-    updateCard();
   }, [deckName]);
+
+  useEffect(() => {
+    if (!SHEETS_RESPONSE.isLoading) {
+      if (SHEETS_RESPONSE.data["netflixAttributes"]) {
+        netflixCardsCopy = JSON.parse(
+          JSON.stringify(SHEETS_RESPONSE.data["netflixAttributes"])
+        );
+
+        updateCard();
+      }
+    }
+  }, [SHEETS_RESPONSE.data]);
 
   function setRandomCategory() {
     const randomNumber = Math.floor(Math.random() * 3);
@@ -118,9 +118,9 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
   function changeCategory(category: string) {
     setCurrentCategory(category);
   }
-  const showSettings = () => {
-    alert("No Settings Yet!");
-  };
+  // const showSettings = () => {
+  //   alert("No Settings Yet!");
+  // };
 
   function setPoints(points: number) {
     if (currentTeam === TEAM_BLUE) {
@@ -129,10 +129,6 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
       setRedTeamPoints(points);
     }
   }
-
-  useEffect(() => {
-    updateCard();
-  }, [currentTeam]);
 
   const handleTeamChange = (team: string) => {
     setCurrentTeam(() => team);
@@ -152,11 +148,24 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     });
   };
 
+  function showEmpty() {
+    return cardContent.netflixAttribute.answer === "";
+  }
+  
+  if (SHEETS_RESPONSE.isLoading) {
+    return <>Data Loading</>;
+  }
   return (
     <>
       <title>Netflix: The Game</title>
-      <meta name="og:description" content="Make them guess the movie by Quote It, Act It or giving just One Word!"></meta>
-      <meta name="og:image" content="https://www.edigitalagency.com.au/wp-content/uploads/Netflix-logo-red-black-png.png"></meta>
+      <meta
+        name="og:description"
+        content="Make them guess the movie by Quote It, Act It or giving just One Word!"
+      ></meta>
+      <meta
+        name="og:image"
+        content="https://www.edigitalagency.com.au/wp-content/uploads/Netflix-logo-red-black-png.png"
+      ></meta>
       <div className="w-screen h-screen bg-gray-900 justify-center pt-5">
         <div className="lg:w-2/3 lg:h-1/3 w-full h-2/6 m-auto p-5">
           {/* <div className=" flex flex-row justify-end text-gray-500 m-auto w-full mb-4 text-3xl">
@@ -188,7 +197,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
             </h1>
           </div>
           <div className="text-center h-full">
-            {netflixCardsCopy.length !== 0 ? (
+            {!showEmpty() ? (
               <NetflixCard
                 category={currentCategory}
                 netflixAttribute={cardContent?.netflixAttribute}
@@ -203,7 +212,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
                 markCorrect();
               }}
               className="col-span-2 bg-green-500 hover:bg-green-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={netflixCardsCopy.length === 0}
+              disabled={showEmpty()}
             >
               <AiOutlineCheck />
             </button>
@@ -213,7 +222,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
                 updateCard();
               }}
               className="col-auto bg-yellow-500 hover:bg-yellow-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl flex justify-center items-center"
-              disabled={netflixCardsCopy.length === 0}
+              disabled={showEmpty()}
             >
               <TbPlayerSkipForwardFilled />
             </button>
@@ -223,9 +232,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
                 changeCategory(ONE_WORD);
               }}
               className="col-span-1  bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={
-                netflixCardsCopy.length === 0 || currentCategory === ONE_WORD
-              }
+              disabled={showEmpty() || currentCategory === ONE_WORD}
             >
               1
             </button>
@@ -235,9 +242,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
                 changeCategory(ACT_IT);
               }}
               className="col-span-1 bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={
-                netflixCardsCopy.length === 0 || currentCategory === ACT_IT
-              }
+              disabled={showEmpty() || currentCategory === ACT_IT}
             >
               <FaTheaterMasks />
             </button>
@@ -247,9 +252,7 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
                 changeCategory(QUOTE_IT);
               }}
               className="col-span-1 bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={
-                netflixCardsCopy.length === 0 || currentCategory === QUOTE_IT
-              }
+              disabled={showEmpty() || currentCategory === QUOTE_IT}
             >
               <BiSolidQuoteAltLeft />
             </button>
@@ -259,3 +262,30 @@ export function NetflixPage({ deckName }: NetflixPageProps) {
     </>
   );
 }
+
+// Function that Gets New Card from the deck
+const getNewCard = () => {
+  functionCallCount = functionCallCount + 1;
+  let randomIdx = currentIdx;
+  let loopCount = 0;
+  while (
+    randomIdx == currentIdx &&
+    netflixCardsCopy.length > 0 &&
+    loopCount < 100
+  ) {
+    randomIdx = Math.floor(Math.random() * netflixCardsCopy.length);
+    loopCount = loopCount + 1;
+  }
+
+  currentIdx = randomIdx;
+  let netflixAttribute: NetflixAttribute = netflixCardsCopy[randomIdx];
+
+  if (netflixCardsCopy.length >= 1) {
+    netflixCardsCopy.splice(randomIdx, 1);
+  }
+
+  if (!netflixAttribute) {
+    return { answer: "" };
+  }
+  return netflixAttribute;
+};
