@@ -29,7 +29,9 @@ export default async function getNetflixSheetAttributes(
 function buildAttributes(data: Array<any>): Array<NetflixAttribute> {
   let netflixAttributes: Array<NetflixAttribute> = [];
   data.forEach((row: Array<string>) => {
-    netflixAttributes.push({ answer: row[0] });
+    if (row[0].trim() != "") {
+      netflixAttributes.push({ answer: row[0] });
+    }
   });
   return netflixAttributes;
 }
