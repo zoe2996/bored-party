@@ -1,20 +1,19 @@
 import { google } from "googleapis";
-import key from "../../../key.json";
 import { NextApiRequest, NextApiResponse } from "next";
 async function getContents() {
   try {
     console.log("API CALLED!!");
     const target = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
     const jwt = new google.auth.JWT(
-      key.client_email,
+      process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
       undefined,
-      key.private_key,
+      process.env.GOOGLE_SHEETS_PRIVATE_KEY,
       target
     );
 
     const sheets = google.sheets({ version: "v4", auth: jwt });
     const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: key.spreadsheet_id,
+      spreadsheetId: process.env.SPREADSHEET_ID,
       range: "taboo", // sheet name
     });
 
