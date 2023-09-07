@@ -7,8 +7,8 @@ export type TabooAttribute = {
 
 
 export enum TabooDifficultyColor {
-    EASY='bg-green-700',
-    MEDIUM='bg-amber-600',
-    HARD='bg-red-600',
+    EASY='bg-sky-500',
+    MEDIUM='bg-emerald-600',
+    HARD='bg-red-500',
     VERY_HARD='bg-rose-950'
 }
