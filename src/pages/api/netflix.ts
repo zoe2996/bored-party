@@ -16,7 +16,7 @@ export default async function getNetflixSheetAttributes(
   const categoryIndexNumber = getIndexNumber(category, categories ?? []);
   const columnName = getColumnName(categoryIndexNumber);
 
-  const data = await getContents(`netflix!${columnName}2:${columnName}1000`);
+  const data = await getContents(`${SHEET_NAME}!${columnName}2:${columnName}1000`);
 
   if (data !== null) {
     const response = await buildAttributes(data);
