@@ -32,7 +32,7 @@ function GamePanel({ addedClass, text, link }: GamePanelHeader) {
     <>
       <button
         className={
-          "col-auto p-20 rounded-xl font-sans font-bold text-xl " + addedClass
+          `col-auto p-20 rounded-xl font-sans font-bold text-xl ${addedClass} hover:bg-white hover:text-black`
         }
         onClick={() => {
           router.push(link);

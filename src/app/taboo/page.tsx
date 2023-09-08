@@ -1,6 +1,6 @@
 "use client";
 
-import { TabooPage } from "./main";
+import { TabooPage } from "./components/main";
 
 
 

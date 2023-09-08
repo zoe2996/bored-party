@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { TabooAttribute } from "./types/taboo.type";
+import { TabooAttribute } from "../types/taboo.type";
 import Card from "@/components/shared/card.component";
 import { CardProperty } from "@/types/card.type";
 import Image from "next/image";
@@ -16,7 +16,7 @@ export function TabooCard({
     tabooElements.push(
       <h3
         key={taboo}
-        className="flex align-middle flex-row text-center justify-center font-sans font-medium text-3xl mt-4"
+        className="flex align-middle flex-row text-center justify-center font-sans font-medium text-2xl mt-3"
       >
         {taboo}
       </h3>

@@ -1,8 +1,8 @@
-import { DECKS, getAllDecks } from "./decks/deckCollection";
+import { DECKS, getAllDecks } from "../decks/deckCollection";
 import { AiFillSetting } from "react-icons/ai";
-import { TabooAttribute, TabooDifficultyColor } from "./types/taboo.type";
+import { TabooAttribute, TabooDifficultyColor } from "../types/taboo.type";
 import { useEffect, useState } from "react";
-import { TabooCard } from "./components";
+import { TabooCard } from "./card";
 import useSWR from "swr";
 import LoadingCircle from "@/components/shared/loading.component";
 
