@@ -12,7 +12,7 @@ export default function Deck() {
         name="og:description"
         content="Make them guess the personality by their Famous Lines, Behaviour or just Posing It!"
       ></meta>
-      <meta name="og:image" content="https://imgur.com/a/kJfS1ob"></meta>
+      <meta name="og:image" content="https://i.imgur.com/oRVkx2Q.jpg"></meta>
       <ImpersonatorPage live={true}></ImpersonatorPage>
     </>
   );

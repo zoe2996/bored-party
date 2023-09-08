@@ -174,7 +174,7 @@ export function ImpersonatorPage({ deckName, live }: ImpersonatorPageProps) {
       ></meta>
       <meta
         name="og:image"
-        content="https://imgur.com/a/kJfS1ob"
+        content="https://i.imgur.com/oRVkx2Q.jpg"
       ></meta>
       <div className="w-screen h-screen bg-gray-900 justify-center pt-5">
         <div className="lg:w-2/3 lg:h-1/3 w-full h-2/6 m-auto p-5">
