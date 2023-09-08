@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { NetflixAttribute } from "../types/netflix.type";
+import { ImpersonatorAttribute } from "../types/impersonator.type";
 import { DECKS, getAllDecks } from "../decks/deckCollection";
-import { AiFillSetting } from "react-icons/ai";
-import { NetflixCard } from "./card";
+import { ImpersonatorCard } from "./card";
 import { TEAM_BLUE, TEAM_RED, TeamToggle } from "./team";
 import { TbPlayerSkipForwardFilled } from "react-icons/tb";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaTheaterMasks } from "react-icons/fa";
 import { BiSolidQuoteAltLeft } from "react-icons/bi";
 import { TimerProgress, getCountdownDate } from "./timer";
+import { FaPersonWalking } from 'react-icons/fa6'
 let currentIdx: number;
 let functionCallCount = 0;
-let netflixCardsCopy: Array<NetflixAttribute> = [];
+let impersonatorCardsCopy: Array<ImpersonatorAttribute> = [];
 
 const ACT_IT: string = "Act It";
-const ONE_WORD: string = "One Word";
+const POSE_IT: string = "Pose It";
 const QUOTE_IT: string = "Quote It";
 const DEFAULT_TIMER_SECONDS = 90;
 
@@ -22,18 +22,18 @@ import useSWR from "swr";
 import LoadingCircle from "@/components/shared/loading.component";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-interface NetflixPageProps {
+interface ImpersonatorPageProps {
   deckName?: string;
   live?: boolean;
 }
 
-export function NetflixPage({ deckName, live }: NetflixPageProps) {
+export function ImpersonatorPage({ deckName, live }: ImpersonatorPageProps) {
   // Card Content State
   const [cardContent, setCardContent] = useState<{
-    netflixAttribute: NetflixAttribute;
+    impersonatorAttribute: ImpersonatorAttribute;
   }>(() => {
     return {
-      netflixAttribute: {
+      impersonatorAttribute: {
         answer: "",
       },
     };
@@ -57,12 +57,12 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
   // didMount effect
   useEffect(() => {
     if (live) {
-      netflixCardsCopy = [];
+      impersonatorCardsCopy = [];
     } else {
       if (deckName === undefined || !Object.keys(DECKS).includes(deckName)) {
-        netflixCardsCopy = JSON.parse(JSON.stringify(getAllDecks()));
+        impersonatorCardsCopy = JSON.parse(JSON.stringify(getAllDecks()));
       } else {
-        netflixCardsCopy = JSON.parse(JSON.stringify(DECKS[deckName]));
+        impersonatorCardsCopy = JSON.parse(JSON.stringify(DECKS[deckName]));
       }
       updateCard();
     }
@@ -71,8 +71,8 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
   useEffect(() => {
     if (!SHEETS_RESPONSE.isLoading) {
       if (SHEETS_RESPONSE.data) {
-        netflixCardsCopy = JSON.parse(
-          JSON.stringify(SHEETS_RESPONSE.data["netflixAttributes"])
+        impersonatorCardsCopy = JSON.parse(
+          JSON.stringify(SHEETS_RESPONSE.data["impersonatorAttributes"])
         );
 
         updateCard();
@@ -84,7 +84,7 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
     const randomNumber = Math.floor(Math.random() * 3);
 
     if (randomNumber === 0) {
-      setCurrentCategory(ONE_WORD);
+      setCurrentCategory(POSE_IT);
     } else if (randomNumber === 1) {
       setCurrentCategory(ACT_IT);
     } else if (randomNumber === 2) {
@@ -93,12 +93,12 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
   }
 
   const updateCard = () => {
-    setCardContent({ netflixAttribute: getNewCard() });
+    setCardContent({ impersonatorAttribute: getNewCard() });
     setRandomCategory();
   };
 
   function getAddPoints() {
-    if (currentCategory === ONE_WORD) {
+    if (currentCategory === POSE_IT) {
       return 3;
     } else if (currentCategory === ACT_IT) {
       return 2;
@@ -155,7 +155,7 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
   };
 
   function showEmpty() {
-    return cardContent.netflixAttribute.answer === "";
+    return cardContent.impersonatorAttribute.answer === "";
   }
 
   if (SHEETS_RESPONSE.isLoading) {
@@ -170,11 +170,11 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
       <title>Impersonator</title>
       <meta
         name="og:description"
-        content="Make them guess the movie by Quote It, Act It or giving just One Word!"
+        content="Make them guess the personality by their Famous Lines, Behaviour or just Posing It!"
       ></meta>
       <meta
         name="og:image"
-        content="https://www.edigitalagency.com.au/wp-content/uploads/Netflix-logo-red-black-png.png"
+        content="https://imgur.com/a/kJfS1ob"
       ></meta>
       <div className="w-screen h-screen bg-gray-900 justify-center pt-5">
         <div className="lg:w-2/3 lg:h-1/3 w-full h-2/6 m-auto p-5">
@@ -208,10 +208,10 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
           </div>
           <div className="text-center h-full">
             {!showEmpty() ? (
-              <NetflixCard
+              <ImpersonatorCard
                 category={currentCategory}
-                netflixAttribute={cardContent?.netflixAttribute}
-              ></NetflixCard>
+                impersonatorAttribute={cardContent?.impersonatorAttribute}
+              ></ImpersonatorCard>
             ) : (
               <h1 className="font-bold text-4xl">No More Cards Left</h1>
             )}
@@ -239,12 +239,12 @@ export function NetflixPage({ deckName, live }: NetflixPageProps) {
 
             <button
               onClick={() => {
-                changeCategory(ONE_WORD);
+                changeCategory(POSE_IT);
               }}
               className="col-span-1  bg-sky-500 hover:bg-sky-500 disabled:bg-gray-500 disabled:text-gray-700  rounded-3xl text-white font-bold py-6 px-4 text-center mx-2 text-5xl  flex justify-center items-center"
-              disabled={showEmpty() || currentCategory === ONE_WORD}
+              disabled={showEmpty() || currentCategory === POSE_IT}
             >
-              1
+              <FaPersonWalking/>
             </button>
 
             <button
@@ -280,22 +280,22 @@ const getNewCard = () => {
   let loopCount = 0;
   while (
     randomIdx == currentIdx &&
-    netflixCardsCopy.length > 0 &&
+    impersonatorCardsCopy.length > 0 &&
     loopCount < 100
   ) {
-    randomIdx = Math.floor(Math.random() * netflixCardsCopy.length);
+    randomIdx = Math.floor(Math.random() * impersonatorCardsCopy.length);
     loopCount = loopCount + 1;
   }
 
   currentIdx = randomIdx;
-  let netflixAttribute: NetflixAttribute = netflixCardsCopy[randomIdx];
+  let impersonatorAttribute: ImpersonatorAttribute = impersonatorCardsCopy[randomIdx];
 
-  if (netflixCardsCopy.length >= 1) {
-    netflixCardsCopy.splice(randomIdx, 1);
+  if (impersonatorCardsCopy.length >= 1) {
+    impersonatorCardsCopy.splice(randomIdx, 1);
   }
 
-  if (!netflixAttribute) {
+  if (!impersonatorAttribute) {
     return { answer: "" };
   }
-  return netflixAttribute;
+  return impersonatorAttribute;
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { NetflixPage } from "./components/main";
+import { ImpersonatorPage } from "./components/main";
 
 import useSWR from "swr";
 
@@ -11,5 +11,5 @@ export default function Home() {
   useEffect(() => {
    
   }, []);
-  return <NetflixPage></NetflixPage>;
+  return <ImpersonatorPage></ImpersonatorPage>;
 }

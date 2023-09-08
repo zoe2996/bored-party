@@ -16,18 +16,16 @@ export default async function getNetflixSheetAttributes(
 ) {
   let category: string = req.query["category"]?.toString() ?? "";
 
-try{
-
-  const data = await getContents(`${SHEET_NAME}!A2:$G1000`);
-  if(data!==null){
-    const response = await buildAttributes(data);
-    res.status(200).json({ tabooAttributes: response });
-  }
-  res.status(400).json({message:"ERROR OCCURRED!"})
-}
-catch(err){
-
-    console.log(err)
+  try {
+    const data = await getContents(`${SHEET_NAME}!A2:$G1000`);
+    if (data !== null) {
+      const response = await buildAttributes(data);
+      res.status(200).json({ tabooAttributes: response });
+    } else {
+      res.status(400).json({ message: "ERROR OCCURRED!" });
+    }
+  } catch (err) {
+    console.log(err);
 
     res.status(400).json({ message: "ERROR OCCURRED" });
   }

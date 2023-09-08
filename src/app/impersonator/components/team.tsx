@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { PiUserSwitch } from "react-icons/pi";
 export const TEAM_BLUE: string = "BLUE";
 export const TEAM_RED: string = "RED";

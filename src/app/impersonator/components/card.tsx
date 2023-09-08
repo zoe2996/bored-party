@@ -1,14 +1,14 @@
 import Card from "@/components/shared/card.component";
-import { NetflixAttribute } from "../types/netflix.type";
+import { ImpersonatorAttribute } from "../types/impersonator.type";
 import { CardProperty } from "@/types/card.type";
 import { ReactElement } from "react";
 import {FaMasksTheater} from 'react-icons/fa6';
 
-interface NetflixCardHeader {
-  netflixAttribute: NetflixAttribute;
+interface ImpersonatorCardHeader {
+  impersonatorAttribute: ImpersonatorAttribute;
   category: string;
 }
-export function NetflixCard({ netflixAttribute, category }: NetflixCardHeader) {
+export function ImpersonatorCard({ impersonatorAttribute, category }: ImpersonatorCardHeader) {
   function getTextSizeClass(answer: string): string {
     if (answer.length <= 20) {
       return "text-3xl";
@@ -23,17 +23,17 @@ export function NetflixCard({ netflixAttribute, category }: NetflixCardHeader) {
     <>
       <div className="p-5 text-center w-full h-full bg-black flex items-center flex-col">
         <div className="px-3 text-center m-auto flex-col flex h-full items-center">
-          <div className="text-3xl text-green-500">
+          <div className="text-5xl text-green-500">
           <FaMasksTheater/>
           </div>
           <div className="h-2/3 overflow-hidden flex flex-col align-middle justify-center items-center">
             <h1
               className={
                 "font-sans font-bold text-white text-center " +
-                getTextSizeClass(netflixAttribute.answer)
+                getTextSizeClass(impersonatorAttribute.answer)
               }
             >
-              {netflixAttribute.answer}
+              {impersonatorAttribute.answer}
             </h1>
           </div>
 
