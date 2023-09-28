@@ -12,13 +12,18 @@ export default function Home() {
           <h1 className="font-sans text-3xl lg:text-4xl font-bold p-4">
             Games
           </h1>
-          <div className="grid grid-cols-2 w-full gap-4">
-            <GamePanel text="Taboo" link="/taboo" addedClass="bg-purple-600" />
+          <div className="grid grid-cols-2 w-full gap-4 sm:gap-2">
+            <GamePanel 
+            text="Taboo" 
+            link="/taboo" 
+            addedClass="bg-purple-600" />
+
             <GamePanel
               text="Netflix: The Game"
               link="/netflix"
               addedClass="bg-red-600"
             />
+
             <GamePanel
               text="Impersonator"
               link="/impersonator/live"
@@ -41,7 +46,7 @@ function GamePanel({ addedClass, text, link }: GamePanelHeader) {
   return (
     <>
       <button
-        className={`col-auto p-10 rounded-xl font-sans font-bold text-xl ${addedClass} hover:bg-white hover:text-black`}
+        className={`col-auto p-8 lg:p-10 whitespace-pre-wrap rounded-xl font-sans font-bold text-md text-center ${addedClass} lg:text-xl hover:bg-white hover:text-black`}
         onClick={() => {
           router.push(link);
         }}
